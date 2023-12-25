@@ -16,17 +16,25 @@
 
 # Nueva funcionalidades
 
-## Agregar un boton para ver el historial de las contraseñas generadas. El boton abrira una nueva ventana
+## Boton llamado (Agregar a mis contraseñas) para agregar la contraseña a una lista llamada: "Mis contraseñas" (se puede ir a esa seccíon mediante otro boton)
 
-* En un tabla apareceran las contraseñas generadas con las siguentes caracteristicas :
+* El boton estar arriba del boton generar
+* cuando se le de al boton (Agregar a mis contraseñas) abrira una nueva ventana donde se podra poner un mensaje y la contraseña se asociara a ese mensaje
+* El campo donde se pondra el mensaje tendra un placer holder: Escriba a que sitio o para se utilizara la contraseña. Ejemplo : Facebook : (su contraseña)
 
-    - La contraseña generada
-    - Fecha y hora en que se genero
-    - Si se copio o no
-    - Un boton para copiarla
+* Cuando el usuario le de por primera ves al boton le mostrara un ventana con el mensaje : no esta registrado.
+    - mostrara dos opciones, salir y registrarce
+    - si el usuario preciona el boton salir se cerrara la ventana
+    - si el usuario preciona el boton registrarce le abrira una nueva ventana para registrarce
+    - Se mostrar un mensaje de que ha sido registrado exitoxamente o no y debe intentarlo de nuevo
+    - Si el registro fue exitoso le mostrar el mensaje : ¡registrado exitosamente! Para ver su contraseñas guardadas ingrese a la sección "Mis contraseñas" con su usuario y clave
 
-## Obcion para agregar la contraseña a una lista llamada: "Mis contraseñas"
+## Boton (Mis contraseñas) ubicado en la parte superior derecha 
 
-* Un boton llevara a esa sección. Estar ubicado en la parte superior derecha
-* Sera necesario registrarce para poder ingresar a esa sección
-
+* Boton que abrira la sección donde se podran ver la contraseña que el usuario haya agregado mediante el boton (Agregar a mis contraseñas)
+* En esta ventana habra una tabla de 2 columnas una espacio para la contraseña y uno para el mensaje
+* Si el usuario le da por primera ves a mis contraseñas le mostrara el mensaje de debe registrarce o salir
+    - si el usuario preciona el boton "salir" se cerrara la ventana
+    - si el usuario preciona el boton registrarce le abrira una nueva ventana para registrarce
+    - Se mostrar un mensaje de que ha sido registrado exitoxamente o no y debe intentarlo de nuevo
+    - Si el registro fue exitoso le mostrar el mensaje : ¡registrado exitosamente! Para ver su contraseñas guardadas vuelva a oprimir el boton y ingrese con su usuario y clave

@@ -2,7 +2,7 @@ import typing, sys
 from script import *
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPalette, QFont
-from PyQt6.QtWidgets import QMainWindow, QWidget, QPushButton, QCheckBox, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QApplication, QTextEdit
+from PyQt6.QtWidgets import QMainWindow, QWidget, QPushButton, QCheckBox, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QApplication, QLineEdit
 
 
 class ventana(QWidget):
@@ -22,7 +22,7 @@ class ventana(QWidget):
 
         # Establecer el color de fondo deseado
         color_de_fondo = QColor(2, 179, 255)  #color de  fondo
-        color_de_fondo.setAlphaF(0.5) #Establecer la transparencia al 50% (0 = 0% - 1 = 100%)
+        color_de_fondo.setAlphaF(0.5) #Establecer la transparencia al 50% (0 = 0% | 1 = 100%)
         
         paleta.setColor(QPalette.ColorRole.Window, color_de_fondo)
         self.setPalette(paleta)
@@ -67,28 +67,97 @@ class ventana(QWidget):
 
         mensaje = QLabel(self)
         mensaje.setText("Si no seleciona ninguna de las opciones, la contraseña solo se generara en letras minusculas")
-        mensaje.setFont(QFont('Roboto', 8))
         mensaje.move(30, 350)
+        mensaje_styles = """
+            QLabel{
+                font-family: 'Roboto';
+                font-size: 10px;
+                font-weight: bold;
+            }
+        """
+        mensaje.setStyleSheet(mensaje_styles)
 
-        self.mostrarContrasena = QTextEdit(self)
+        self.mostrarContrasena = QLineEdit(self)
         self.mostrarContrasena.setDisabled(True)
         self.mostrarContrasena.setText("Contraseña Generada")
         self.mostrarContrasena.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.mostrarContrasena.resize(150, 25)
-        self.mostrarContrasena.move(250, 200)
-
-
-        btn_generar = QPushButton(self)
-        btn_generar.setText("Generar")
-        btn_generar.resize(75, 30)
-        btn_generar.move(310, 250)
-        btn_generar.clicked.connect(self.generar)
+        self.mostrarContrasena.move(250, 180)
+        mostrarContrasena_styles = """
+            QLineEdit {
+                background-color: lightgray;
+                border: 1.5px solid black;
+                border-radius: 8px;
+                color: #0E719C;
+                font-family: 'Roboto';
+            }
+        """
+        self.mostrarContrasena.setStyleSheet(mostrarContrasena_styles)
 
         btn_copiar = QPushButton(self)
-        btn_copiar.setText("Copiar")
+        btn_copiar.setText("COPIAR")
         btn_copiar.resize(50, 25)
-        btn_copiar.move(410, 200)
+        btn_copiar.move(410, 180)
+        btn_copiar_styles = """
+            QPushButton {
+                background-color: lightgray;
+                border: 1.5px solid black;
+                border-radius: 8px;
+                color: #0E719C;
+                font-family: 'Roboto';
+            }
+        """
+        btn_copiar.setStyleSheet(btn_copiar_styles)
+
         btn_copiar.clicked.connect(self.copiar)
+
+        btn_agregar_Miscontrasenas = QPushButton(self)
+        btn_agregar_Miscontrasenas.setText("Agregar a mis contraseñas")
+        btn_agregar_Miscontrasenas.resize(210, 25)
+        btn_agregar_Miscontrasenas.move(250, 220)
+        btn_agregar_Miscontrasenas_styles = """ 
+            QPushButton {
+                background-color: lightgray;
+                border: 1.5px solid black;
+                border-radius: 8px;
+                color: #0E719C;
+                font-family: 'Roboto';
+            }
+        """
+        btn_agregar_Miscontrasenas.setStyleSheet(btn_agregar_Miscontrasenas_styles)
+
+        btn_generar = QPushButton(self)
+        btn_generar.setText("GENERAR")
+        btn_generar.resize(75, 30)
+        btn_generar.move(310, 260)
+        btn_generar_styles = """
+            QPushButton {
+                background-color: lightgray;
+                border: 1.5px solid black;
+                border-radius: 8px;
+                color: #0E719C;
+                font-family: 'Roboto';
+            }
+        """
+        btn_generar.setStyleSheet(btn_generar_styles)
+
+        btn_generar.clicked.connect(self.generar)
+
+        btn_misContrasenas = QPushButton(self)
+        btn_misContrasenas.setText("Mis contraseñas")
+        btn_misContrasenas.resize(75, 25)
+        btn_misContrasenas.move(410, 20)
+        btn_misContrasenas_styles = """
+            QPushButton {
+                background-color: lightgray;
+                border: 1.5px solid black;
+                border-radius: 8px;
+                color: #0E719C;
+                font-family: 'Roboto';
+                font-size: 10px;
+            }
+        """
+        btn_misContrasenas.setStyleSheet(btn_misContrasenas_styles)
 
     def generar(self): #Boton para generar contraseña
         
@@ -105,7 +174,7 @@ class ventana(QWidget):
 
         portapapeles = QApplication.clipboard() #Crea una intancia del portapapeles del sistema usando el metodo .clipboard
 
-        contraseña = self.mostrarContrasena.toPlainText() #.toPlainTexT() se usa para obtener el texto de un objeto QTextEdit.
+        contraseña = self.mostrarContrasena.text() #.text() se usa para obtener el texto de un objeto QLineEdit().
 
         #El if es para solo copiar si se ha generado una contraseña. De lo contrario copiaria el texto que cumple la funcion de placeholder en el objeto QTextEdit
 
