@@ -1,6 +1,7 @@
 import typing, sys
 from script import *
 from ventanaContrasena import *
+from agregarContrasena import *
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPalette, QFont
 from PyQt6.QtWidgets import QMainWindow, QWidget, QPushButton, QCheckBox, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QApplication, QLineEdit
@@ -9,6 +10,7 @@ from PyQt6.QtWidgets import QMainWindow, QWidget, QPushButton, QCheckBox, QVBoxL
 class ventana(QWidget):
     def __init__(self):
         super().__init__()
+        self.mostrarContrasena = QLineEdit(self)
         self.inicilalizarIU()
 
         self.show()
@@ -79,9 +81,8 @@ class ventana(QWidget):
         mensaje.setStyleSheet(mensaje_styles)
 
         #Campo donde se mostrara la contraseña
-        self.mostrarContrasena = QLineEdit(self)
         self.mostrarContrasena.setDisabled(True)
-        self.mostrarContrasena.setText("Contraseña Generada")
+        self.mostrarContrasena.setText("'Oprima el boton GENERAR'")
         self.mostrarContrasena.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.mostrarContrasena.resize(150, 25)
         self.mostrarContrasena.move(250, 180)
@@ -92,6 +93,7 @@ class ventana(QWidget):
                 border-radius: 8px;
                 color: #0E719C;
                 font-family: 'Roboto';
+                font-size: 11px;
             }
         """
         self.mostrarContrasena.setStyleSheet(mostrarContrasena_styles)
@@ -129,6 +131,7 @@ class ventana(QWidget):
             }
         """
         btn_agregar_Miscontrasenas.setStyleSheet(btn_agregar_Miscontrasenas_styles)
+        btn_agregar_Miscontrasenas.clicked.connect(self.agregarContrasena)
 
         #Boton para generar un nueva contraseña
         btn_generar = QPushButton(self)
@@ -164,8 +167,7 @@ class ventana(QWidget):
             }
         """
         btn_misContrasenas.setStyleSheet(btn_misContrasenas_styles)
-        btn_misContrasenas.clicked.connect(self.agregar)
-
+        btn_misContrasenas.clicked.connect(self.misContrasenas)
 
     def generar(self): #Boton para generar contraseña
         
@@ -186,14 +188,22 @@ class ventana(QWidget):
 
         #El if es para solo copiar si se ha generado una contraseña. De lo contrario copiaria el texto que cumple la funcion de placeholder en el objeto QTextEdit
 
-        if contraseña != "Contraseña Generada":
+        if contraseña != "'Oprima el boton GENERAR'":
             # Copiar el texto al portapapeles
             portapapeles.setText(contraseña)
             print(contraseña)
 
-    def agregar(self):
+    def misContrasenas(self):
         self.ventana_misContraseñas = misContraseñas()
         self.ventana_misContraseñas.show()
+
+    def agregarContrasena(self):
+        contraseña = self.mostrarContrasena.text()
+
+        if contraseña != "'Oprima el boton GENERAR'":
+            self.ventana_agregar = agregarContraseña(contraseña)
+            self.ventana_agregar.show()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

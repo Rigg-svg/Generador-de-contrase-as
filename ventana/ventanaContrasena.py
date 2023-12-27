@@ -3,7 +3,6 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPalette
 from PyQt6.QtWidgets import QMainWindow, QWidget, QPushButton, QVBoxLayout, QLabel, QApplication, QLineEdit, QTableWidget, QDialog, QHeaderView, QTableWidgetItem
 
-
 class misContraseñas(QDialog):
     def __init__(self):
         super().__init__()
@@ -58,8 +57,6 @@ class misContraseñas(QDialog):
 
         self.tabla.cellClicked.connect(self.slot_cell_clicked) 
 
-        
-
     def addItemsTable(self, contraseña, mensaje): #Funcion para agregar los items a la tabla
         row, col = 0, 0
 
@@ -81,5 +78,5 @@ class misContraseñas(QDialog):
 
 """ if __name__ == "__main__":
     app = QApplication(sys.argv)
-    login = misContraseñas()
+    ventana = misContraseñas()
     sys.exit(app.exec()) """
