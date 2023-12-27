@@ -37,4 +37,4 @@
     - si el usuario preciona el boton "salir" se cerrara la ventana
     - si el usuario preciona el boton registrarce le abrira una nueva ventana para registrarce
     - Se mostrar un mensaje de que ha sido registrado exitoxamente o no y debe intentarlo de nuevo
-    - Si el registro fue exitoso le mostrar el mensaje : ¡registrado exitosamente! Para ver su contraseñas guardadas vuelva a oprimir el boton y ingrese con su usuario y clave
+    - Si el registro fue exitoso le mostrar el mensaje : ¡registrado exitosamente! Para ver su contraseñas guardadas vuelva a oprimir el  boton y ingrese con su usuario y clave

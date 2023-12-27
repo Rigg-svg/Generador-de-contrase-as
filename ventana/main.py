@@ -1,5 +1,6 @@
 import typing, sys
 from script import *
+from ventanaContrasena import *
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPalette, QFont
 from PyQt6.QtWidgets import QMainWindow, QWidget, QPushButton, QCheckBox, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QApplication, QLineEdit
@@ -64,7 +65,7 @@ class ventana(QWidget):
         self.checkbox_simbols.setText("Simbolos")
         self.checkbox_simbols.setFont(QFont('Roboto', 12)) 
 
-
+        #Mensaja del footer
         mensaje = QLabel(self)
         mensaje.setText("Si no seleciona ninguna de las opciones, la contraseña solo se generara en letras minusculas")
         mensaje.move(30, 350)
@@ -77,6 +78,7 @@ class ventana(QWidget):
         """
         mensaje.setStyleSheet(mensaje_styles)
 
+        #Campo donde se mostrara la contraseña
         self.mostrarContrasena = QLineEdit(self)
         self.mostrarContrasena.setDisabled(True)
         self.mostrarContrasena.setText("Contraseña Generada")
@@ -94,6 +96,7 @@ class ventana(QWidget):
         """
         self.mostrarContrasena.setStyleSheet(mostrarContrasena_styles)
 
+        #boton para copiar la contraseña
         btn_copiar = QPushButton(self)
         btn_copiar.setText("COPIAR")
         btn_copiar.resize(50, 25)
@@ -111,6 +114,7 @@ class ventana(QWidget):
 
         btn_copiar.clicked.connect(self.copiar)
 
+        #Boton para agregar la contraseña a mis contraseñas
         btn_agregar_Miscontrasenas = QPushButton(self)
         btn_agregar_Miscontrasenas.setText("Agregar a mis contraseñas")
         btn_agregar_Miscontrasenas.resize(210, 25)
@@ -126,6 +130,7 @@ class ventana(QWidget):
         """
         btn_agregar_Miscontrasenas.setStyleSheet(btn_agregar_Miscontrasenas_styles)
 
+        #Boton para generar un nueva contraseña
         btn_generar = QPushButton(self)
         btn_generar.setText("GENERAR")
         btn_generar.resize(75, 30)
@@ -143,6 +148,7 @@ class ventana(QWidget):
 
         btn_generar.clicked.connect(self.generar)
 
+        #Boton para ir a la sección de mis contraseñas
         btn_misContrasenas = QPushButton(self)
         btn_misContrasenas.setText("Mis contraseñas")
         btn_misContrasenas.resize(75, 25)
@@ -158,6 +164,8 @@ class ventana(QWidget):
             }
         """
         btn_misContrasenas.setStyleSheet(btn_misContrasenas_styles)
+        btn_misContrasenas.clicked.connect(self.agregar)
+
 
     def generar(self): #Boton para generar contraseña
         
@@ -183,6 +191,9 @@ class ventana(QWidget):
             portapapeles.setText(contraseña)
             print(contraseña)
 
+    def agregar(self):
+        self.ventana_misContraseñas = misContraseñas()
+        self.ventana_misContraseñas.show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
