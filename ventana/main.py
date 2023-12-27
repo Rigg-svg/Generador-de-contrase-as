@@ -10,7 +10,6 @@ from PyQt6.QtWidgets import QMainWindow, QWidget, QPushButton, QCheckBox, QVBoxL
 class ventana(QWidget):
     def __init__(self):
         super().__init__()
-        self.mostrarContrasena = QLineEdit(self)
         self.inicilalizarIU()
 
         self.show()
@@ -29,6 +28,8 @@ class ventana(QWidget):
         
         paleta.setColor(QPalette.ColorRole.Window, color_de_fondo)
         self.setPalette(paleta)
+
+        
 
         self.generarInterfaz()
 
@@ -81,6 +82,7 @@ class ventana(QWidget):
         mensaje.setStyleSheet(mensaje_styles)
 
         #Campo donde se mostrara la contraseña
+        self.mostrarContrasena = QLineEdit(self)
         self.mostrarContrasena.setDisabled(True)
         self.mostrarContrasena.setText("'Oprima el boton GENERAR'")
         self.mostrarContrasena.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -198,11 +200,14 @@ class ventana(QWidget):
         self.ventana_misContraseñas.show()
 
     def agregarContrasena(self):
-        contraseña = self.mostrarContrasena.text()
+        contraseña = self.mostrarContrasena.text() #obtener la contraseña que esta en el objeto QLineEdit
 
         if contraseña != "'Oprima el boton GENERAR'":
-            self.ventana_agregar = agregarContraseña(contraseña)
+            self.ventana_agregar = agregarContraseña(self) #Se pasa la clase del ventana principal (class ventana()) para crear una intancia de la ventana principal en la ventana de agregar a mis contraseñas 
             self.ventana_agregar.show()
+    
+    def maximizar_ventana_principal(self):
+        self.showMaximized()
 
 
 if __name__ == "__main__":

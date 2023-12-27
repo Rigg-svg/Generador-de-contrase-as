@@ -1,12 +1,13 @@
 import sys
-#from main import ventana
+from main import ventana
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPalette
 from PyQt6.QtWidgets import QMainWindow, QWidget, QApplication, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QDialog
 
 class agregarContraseña(QDialog):
-    def __init__(self, contraseña):
-        self.contraseña = contraseña
+    def __init__(self, ventanaPrincipal):
+        self.ventanaPrincipal = ventanaPrincipal #Intanciar el objeto de la clase ventana del arhivo 'main'
+        self.contraseña = self.ventanaPrincipal.mostrarContrasena.text() #Crear instancia del campo de la contraseña del arhivo main. Para saber cual es el valor del campo
         super().__init__()
         self.setModal(True)
         self.inicilalizarIU()
@@ -28,6 +29,8 @@ class agregarContraseña(QDialog):
         paleta.setColor(QPalette.ColorRole.Window, color_de_fondo)
         self.setPalette(paleta)
 
+        self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint) #Permite que la ventana quede por encima de las otras
+
         self.generarInterfaz()
 
     def generarInterfaz(self):
@@ -40,7 +43,7 @@ class agregarContraseña(QDialog):
         titulo_dispocicion.move(230, 245)
 
         campo_contrasena = QLineEdit(self)
-        campo_contrasena.resize(100, 30)
+        campo_contrasena.resize(110, 30)
         campo_contrasena.move(207, 157)
         campo_contrasena.setDisabled(True)
         campo_contrasena.setText(self.contraseña)
@@ -95,12 +98,20 @@ class agregarContraseña(QDialog):
 
         btn_cancelar.setStyleSheet(btn_cancelar_styles)
 
+        self.ventanaPrincipal.showMinimized() #minimiza la ventana principal
+        self.showMaximized() #muestra la ventana maximizada
 
     def cancelar(self):
         self.close()
 
     def guardar(self):
         print(self.contraseña)
+
+    def closeEvent(self, event):
+        # Conectar la señal 'closed' de la ventana secundaria a la función de maximizar
+        self.ventanaPrincipal.maximizar_ventana_principal()
+        super().closeEvent(event)
+
 
 
 """ if __name__ == "__main__":
