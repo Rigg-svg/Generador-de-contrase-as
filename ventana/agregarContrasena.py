@@ -1,7 +1,7 @@
 import sys
 from main import ventana
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QColor, QPalette
+from PyQt6.QtGui import QColor, QPalette, QIcon
 from PyQt6.QtWidgets import QMainWindow, QWidget, QApplication, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QDialog
 
 class agregarContraseña(QDialog):
