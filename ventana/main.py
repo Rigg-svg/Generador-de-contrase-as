@@ -2,6 +2,8 @@ import typing, sys
 from script import *
 from ventanaContrasena import *
 from agregarContrasena import *
+from base_datos import *
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPalette, QFont, QIcon
 from PyQt6.QtWidgets import QMainWindow, QWidget, QPushButton, QCheckBox, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QApplication, QLineEdit, QMessageBox, QFormLayout
@@ -9,7 +11,10 @@ from PyQt6.QtWidgets import QMainWindow, QWidget, QPushButton, QCheckBox, QVBoxL
 
 class ventana(QWidget):
     def __init__(self):
-        self.registrado = False
+        self.baseDatos = DB()
+        self.registrado = False #saber si el usuario ya inicio sección
+        self.ventana_misContraseñas = misContraseñas()#Crear la intancia para abrir la ventana "mis contraseñas"
+        self.ventana_noRegistrado = ventanaError()#Crear una instancia de para mostrar la ventana Error, que no iniciado sección
         super().__init__()
         self.inicilalizarIU()
 
@@ -197,12 +202,13 @@ class ventana(QWidget):
             print(contraseña)
 
     def misContrasenas(self):
-        self.ventana_misContraseñas = misContraseñas()
-        self.ventana_misContraseñas.show()
+        if self.registrado:
+            self.ventana_misContraseñas.show()
+        else:
+            self.ventana_noRegistrado.show() #Abrir la ventana de error, si el usuario aún no ha iniciado sección
 
     def agregarContrasena(self):
         if self.registrado is not True:
-            self.ventana_noRegistrado = ventanaError()
             self.ventana_noRegistrado.show()
 
         else:
@@ -216,6 +222,7 @@ class ventana(QWidget):
         self.showMaximized()
 
 
+#ventanas de error, ventana de rigsitrarce y iniciar sección
 class ventanaError(QDialog):
     def __init__(self) :
         super().__init__()
@@ -342,24 +349,25 @@ class ventanaRegistrarce(QDialog):
         main_layout = QFormLayout()
 
         labelInput1 = QLabel("Nombre de usuario:")
-        inputBox1 = QLineEdit()
+        self.inputBox1 = QLineEdit()
 
         labelInput2 = QLabel("Contraseña:")
-        inputBox2 = QLineEdit()
+        self.inputBox2 = QLineEdit()
 
         labelInput3 = QLabel("Repita contraseña:")
-        inputBox3 = QLineEdit()
+        self.inputBox3 = QLineEdit()
 
         btn_registrarse = QPushButton("REGISTRARSE")
 
         main_layout.setVerticalSpacing(30)
 
-        main_layout.addRow(labelInput1, inputBox1)
-        main_layout.addRow(labelInput2, inputBox2)
-        main_layout.addRow(labelInput3, inputBox3)
+        main_layout.addRow(labelInput1, self.inputBox1)
+        main_layout.addRow(labelInput2, self.inputBox2)
+        main_layout.addRow(labelInput3, self.inputBox3)
         main_layout.addRow(btn_registrarse)
 
         self.setLayout(main_layout)
+
 
 class ventanaIniciarSeccion(QDialog):
     def __init__(self):
@@ -389,10 +397,10 @@ class ventanaIniciarSeccion(QDialog):
         main_layout = QFormLayout()
 
         labelInput1 = QLabel("Nombre de usuario:")
-        inputBox1 = QLineEdit()
+        self.inputBox1 = QLineEdit()
 
         labelInput2 = QLabel("Contraseña:")
-        inputBox2 = QLineEdit()
+        self.inputBox2 = QLineEdit()
 
         btn_inciarSeccion = QPushButton("INICIAR SECCIÓN")
 
@@ -400,11 +408,12 @@ class ventanaIniciarSeccion(QDialog):
 
         self.setContentsMargins(0, 40, 0, 40)
 
-        main_layout.addRow(labelInput1, inputBox1)
-        main_layout.addRow(labelInput2, inputBox2)
+        main_layout.addRow(labelInput1, self.inputBox1)
+        main_layout.addRow(labelInput2, self.inputBox2)
         main_layout.addRow(btn_inciarSeccion)
 
         self.setLayout(main_layout)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
