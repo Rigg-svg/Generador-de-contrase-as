@@ -113,17 +113,3 @@ def generarContrasena(opcionMayus, opcionSimbols, opcionNumbers) -> str:
     password = ''.join(password)
 
     return password
-
-def hola():
-    print("hola")
-
-if __name__ == "__main__":
-    opcionMayus = False
-    opcionSimbols = True
-    opcionNumbers = False
-
-    password = ''
-    tam = len(password)
-
-    contraseña = generarContrasena(opcionMayus, opcionSimbols, opcionNumbers, password)
-    print(contraseña)

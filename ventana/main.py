@@ -1,4 +1,4 @@
-import typing, sys
+import sys
 from script import *
 from ventanaContrasena import *
 from agregarContrasena import *
@@ -6,17 +6,19 @@ from base_datos import *
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPalette, QFont, QIcon
-from PyQt6.QtWidgets import QMainWindow, QWidget, QPushButton, QCheckBox, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QApplication, QLineEdit, QMessageBox, QFormLayout
+from PyQt6.QtWidgets import QWidget, QPushButton, QCheckBox, QLabel, QApplication, QLineEdit, QMessageBox, QFormLayout
 
 
 class ventana(QWidget):
     def __init__(self):
-        self.baseDatos = DB()
-        self.registrado = False #saber si el usuario ya inicio sección
-        self.ventana_misContraseñas = misContraseñas()#Crear la intancia para abrir la ventana "mis contraseñas"
-        self.ventana_noRegistrado = ventanaError()#Crear una instancia de para mostrar la ventana Error, que no iniciado sección
         super().__init__()
         self.inicilalizarIU()
+
+        self.inicioSeccionExitoso = False #saber si el usuario ya inicio sección
+        self.ventana_misContraseñas = misContraseñas(self)#Crear la intancia para abrir la ventana "mis contraseñas"
+        self.ventana_noRegistrado = ventanaError(self)#Crear una instancia de para mostrar la ventana Error, que no iniciado sección
+        self.ventana_agregar = agregarContraseña(self) #Se pasa la clase del ventana principal (class ventana()) para crear una intancia de la ventana principal en la ventana de agregar a mis contraseñas
+        self.usuario = ''
 
         self.show()
 
@@ -34,8 +36,6 @@ class ventana(QWidget):
 
         paleta.setColor(QPalette.ColorRole.Window, color_de_fondo)
         self.setPalette(paleta)
-
-
 
         self.generarInterfaz()
 
@@ -202,33 +202,39 @@ class ventana(QWidget):
             print(contraseña)
 
     def misContrasenas(self):
-        if self.registrado:
-            self.ventana_misContraseñas.show()
+        if self.inicioSeccionExitoso:
+
+            if self.ventana_misContraseñas.ventanaInicializada is not True:
+                self.ventana_misContraseñas.inicilalizarIU()
+                self.ventana_misContraseñas.addItemsTable()
+                self.ventana_misContraseñas.show()
+                self.ventana_misContraseñas.ventanaInicializada = True
+
+            else:
+                self.ventana_misContraseñas.addItemsTable()
+                self.ventana_misContraseñas.show()
         else:
-            self.ventana_noRegistrado.show() #Abrir la ventana de error, si el usuario aún no ha iniciado sección
+            self.ventana_noRegistrado.incializarVentana() #Abrir la ventana de error, si el usuario aún no ha iniciado sección
 
     def agregarContrasena(self):
-        if self.registrado is not True:
-            self.ventana_noRegistrado.show()
+        contraseña = self.mostrarContrasena.text() #obtener la contraseña que esta en el objeto QLineEdit
+
+        if self.inicioSeccionExitoso is not True:
+            self.ventana_noRegistrado.incializarVentana()
 
         else:
-            contraseña = self.mostrarContrasena.text() #obtener la contraseña que esta en el objeto QLineEdit
-
             if contraseña != "'Oprima el boton GENERAR'":
-                self.ventana_agregar = agregarContraseña(self) #Se pasa la clase del ventana principal (class ventana()) para crear una intancia de la ventana principal en la ventana de agregar a mis contraseñas
-                self.ventana_agregar.show()
+                self.ventana_agregar.inicilalizarIU()
 
     def maximizar_ventana_principal(self):
         self.showMaximized()
 
-
 #ventanas de error, ventana de rigsitrarce y iniciar sección
 class ventanaError(QDialog):
-    def __init__(self) :
+    def __init__(self, ventanaPrincipal) :
         super().__init__()
         self.setModal(True)
-
-        self.incializarVentana()
+        self.ventanaPrincipal = ventanaPrincipal
 
     def incializarVentana(self):
         self.setWindowIcon(QIcon("Icons/warning.png")) #Establecer el icono de la ventana
@@ -244,6 +250,8 @@ class ventanaError(QDialog):
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint) #Establecer que la ventana que contraponga antes la otras que esten abiertas
 
         self.setGeometry(300, 300, 300, 300)
+        self.setMaximumSize(300, 300) #tamaño maximo en ancho y alto de la ventana
+        self.setMinimumSize(300,300) #tamaño minimo en ancho y alto de la ventana
         self.setWindowTitle("ERROR")
 
         mensaje = QLabel("  ERROR DEBE REGISTRARCE O INICIAR SECCION\n ANTES DE PODER AGREGAR A SU CONTRASEÑAS", self)
@@ -310,23 +318,28 @@ class ventanaError(QDialog):
         warningIcon.setPixmap(QIcon("Icons/warningSVG.svg").pixmap(64, 64))
         warningIcon.move(120, 150)
 
+        self.show() #mostrar la ventana
+
+
     def registrarce(self):
-        self.ventana_registrarce = ventanaRegistrarce()
-        self.ventana_registrarce.show()
+        self.ventana_registrarce = ventanaRegistrarce(self)
+        self.ventana_registrarce.iniciarVentana()
 
     def iniciarSeccion(self):
-        self.ventana_iniciar_seccion = ventanaIniciarSeccion()
-        self.ventana_iniciar_seccion.show()
+        self.ventana_iniciar_seccion = ventanaIniciarSeccion(self)
+        self.ventana_iniciar_seccion.iniciarVentana()
+        self.close() #Cierra esta ventana luego de cerrar la ventana de iniciar sección
 
     def cerrarVentana(self):
         self.close()
 
+#***************************************************************************************
 class ventanaRegistrarce(QDialog):
-    def __init__(self):
+    def __init__(self, ventanaPadre):
         super().__init__()
+        self.baseDatos = DB()
+        self.ventanaPadre = ventanaPadre
         self.setModal(True)
-
-        self.iniciarVentana()
 
     def iniciarVentana(self):
         paleta = self.palette() #Se debe crear un objeto paleta
@@ -341,9 +354,13 @@ class ventanaRegistrarce(QDialog):
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint) #Establecer que la ventana que contraponga antes la otras que esten abiertas
 
         self.setGeometry(300,300,300,220)
+        self.setMaximumSize(300, 300) #tamaño maximo en ancho y alto de la ventana
+        self.setMinimumSize(300,300) #tamaño minimo en ancho y alto de la ventana
         self.setWindowTitle("REGISTRARCE")
 
         self.widgets()
+
+        self.show()
 
     def widgets(self):
         main_layout = QFormLayout()
@@ -358,6 +375,7 @@ class ventanaRegistrarce(QDialog):
         self.inputBox3 = QLineEdit()
 
         btn_registrarse = QPushButton("REGISTRARSE")
+        btn_registrarse.clicked.connect(self.registrarUsuario)
 
         main_layout.setVerticalSpacing(30)
 
@@ -368,13 +386,43 @@ class ventanaRegistrarce(QDialog):
 
         self.setLayout(main_layout)
 
+    def registrarUsuario(self):
+        usuario, contraseña, contraseña2 = self.inputBox1.text(), self.inputBox2.text(), self.inputBox3.text()
+        
+        if contraseña != contraseña2:
+            QMessageBox.warning(self, 
+                                "REGISTRAR USUARIO", 
+                                f"Las contraseñas no coinciden", 
+                                QMessageBox.StandardButton.Close, 
+                                QMessageBox.StandardButton.Close)
+            
+        elif contraseña == contraseña2:
 
+            if self.baseDatos.verificarRegistro(usuario) == None:
+
+                self.baseDatos.registrarUsuario(usuario, contraseña)
+                QMessageBox.information(self, 
+                                "REGISTRAR USUARIO", 
+                                f"Usuario:  {usuario} ¡REGISTRADO EXITOXAMENTE!", 
+                                QMessageBox.StandardButton.Close, 
+                                QMessageBox.StandardButton.Close)
+                self.close()
+
+            else:
+                QMessageBox.warning(self, 
+                                "REGISTRAR USUARIO", 
+                                f"El usuario '{usuario}' ya se encuentra registrado", 
+                                QMessageBox.StandardButton.Close, 
+                                QMessageBox.StandardButton.Close)
+
+#***************************************************************************************
 class ventanaIniciarSeccion(QDialog):
-    def __init__(self):
+    def __init__(self, ventanaPadre):
         super().__init__()
+        self.baseDatos = DB()
+        self.ventanaPadre = ventanaPadre
         self.setModal(True)
 
-        self.iniciarVentana()
 
     def iniciarVentana(self):
         paleta = self.palette() #Se debe crear un objeto paleta
@@ -389,9 +437,13 @@ class ventanaIniciarSeccion(QDialog):
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint) #Establecer que la ventana que contraponga antes la otras que esten abiertas
 
         self.setGeometry(300,300,300,220)
+        self.setMaximumSize(300, 300) #tamaño maximo en ancho y alto de la ventana
+        self.setMinimumSize(300,300) #tamaño minimo en ancho y alto de la ventana
         self.setWindowTitle("INICIAR SECCIÓN")
 
         self.widgets()
+
+        self.show()
 
     def widgets(self):
         main_layout = QFormLayout()
@@ -403,6 +455,7 @@ class ventanaIniciarSeccion(QDialog):
         self.inputBox2 = QLineEdit()
 
         btn_inciarSeccion = QPushButton("INICIAR SECCIÓN")
+        btn_inciarSeccion.clicked.connect(self.iniciarSeccion)
 
         main_layout.setVerticalSpacing(30)
 
@@ -413,6 +466,36 @@ class ventanaIniciarSeccion(QDialog):
         main_layout.addRow(btn_inciarSeccion)
 
         self.setLayout(main_layout)
+
+    def iniciarSeccion(self):
+        usuario, contraseña = self.inputBox1.text(), self.inputBox2.text()
+
+        contraseñaAlmacenada = self.baseDatos.verificarRegistro(usuario) #La funcion devulve un tupla con 4 valores
+
+        if contraseñaAlmacenada:
+        
+            if self.baseDatos.inciarSeccion(contraseña, contraseñaAlmacenada[2]):
+                QMessageBox.information(self,
+                                        "INICIAR SECCIÓN",
+                                        "¡INICIO DE SECCIÓN EXITOSO! Ahora puede ingresar a su sección en el boton mis contraseñas",
+                                        QMessageBox.StandardButton.Ok,
+                                        QMessageBox.StandardButton.Ok)
+                self.ventanaPadre.ventanaPrincipal.inicioSeccionExitoso = True
+                self.ventanaPadre.ventanaPrincipal.usuario = usuario #Usuario que inicio sección
+                self.close()
+
+            else:
+                QMessageBox.warning(self,
+                                "INICIAR SECCIÓN",
+                                "La contraseña o el usuario son incorrectos",
+                                QMessageBox.StandardButton.Close,
+                                QMessageBox.StandardButton.Close)
+        else:
+            QMessageBox.warning(self,
+                                "INICIAR SECCIÓN",
+                                f"El usuario '{usuario} no esta registrado'",
+                                QMessageBox.StandardButton.Close,
+                                QMessageBox.StandardButton.Close)
 
 
 if __name__ == "__main__":

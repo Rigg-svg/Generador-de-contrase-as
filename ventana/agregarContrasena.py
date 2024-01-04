@@ -1,18 +1,15 @@
-import sys
-from main import ventana
+from base_datos import *
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QColor, QPalette, QIcon
-from PyQt6.QtWidgets import QMainWindow, QWidget, QApplication, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QDialog
+from PyQt6.QtGui import QColor, QPalette
+from PyQt6.QtWidgets import  QPushButton, QLabel, QLineEdit, QDialog
 
 class agregarContraseña(QDialog):
     def __init__(self, ventanaPrincipal):
-        self.ventanaPrincipal = ventanaPrincipal #Intanciar el objeto de la clase ventana del arhivo 'main'
-        self.contraseña = self.ventanaPrincipal.mostrarContrasena.text() #Crear instancia del campo de la contraseña del arhivo main. Para saber cual es el valor del campo
         super().__init__()
         self.setModal(True)
-        self.inicilalizarIU()
+        self.ventanaPrincipal = ventanaPrincipal #Intanciar el objeto de la clase ventana del arhivo 'main'
+        self.baseDatos = DB()
 
-        #self.show()
 
     def inicilalizarIU(self):
         self.setWindowTitle("Guardar nueva contraseña")
@@ -33,7 +30,12 @@ class agregarContraseña(QDialog):
 
         self.generarInterfaz()
 
+        self.show()
+
     def generarInterfaz(self):
+        #Crear instancia del campo de la contraseña del arhivo main. Para saber cual es el valor del campo
+        contraseña = self.ventanaPrincipal.mostrarContrasena.text()
+
         titulo_contrasena = QLabel(self)
         titulo_contrasena.setText("Contraseña")
         titulo_contrasena.move(225, 135)
@@ -42,12 +44,12 @@ class agregarContraseña(QDialog):
         titulo_dispocicion.setText("Dispocición")
         titulo_dispocicion.move(230, 245)
 
-        campo_contrasena = QLineEdit(self)
-        campo_contrasena.resize(110, 30)
-        campo_contrasena.move(207, 157)
-        campo_contrasena.setDisabled(True)
-        campo_contrasena.setText(self.contraseña)
-        campo_contrasena.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.campo_contrasena = QLineEdit(self)
+        self.campo_contrasena.resize(110, 30)
+        self.campo_contrasena.move(207, 157)
+        self.campo_contrasena.setDisabled(True)
+        self.campo_contrasena.setText(contraseña)#mostrar la contraseña en pantalla
+        self.campo_contrasena.setAlignment(Qt.AlignmentFlag.AlignCenter)
         campo_contrasena_styles = """
             QLineEdit {
                 background-color: lightgray;
@@ -58,11 +60,11 @@ class agregarContraseña(QDialog):
             }
         """
 
-        campo_contrasena.setStyleSheet(campo_contrasena_styles)
+        self.campo_contrasena.setStyleSheet(campo_contrasena_styles)
 
-        campo_mensaje = QLineEdit(self)
-        campo_mensaje.resize(200, 30)
-        campo_mensaje.move(155, 266)
+        self.campo_mensaje = QLineEdit(self)
+        self.campo_mensaje.resize(200, 30)
+        self.campo_mensaje.move(155, 266)
 
         btn_guardar = QPushButton(self)
         btn_guardar.setText("Guardar")
@@ -101,20 +103,15 @@ class agregarContraseña(QDialog):
         self.ventanaPrincipal.showMinimized() #minimiza la ventana principal
         self.showMaximized() #muestra la ventana maximizada
 
-    def cancelar(self):
+    def guardar(self):
+        mensaje = self.campo_mensaje.text() #obtener el texto del campo mensaje
+        contraseña = self.campo_contrasena.text() #obtemer el texto del campo contraseña
+        usuario = self.usuario = self.ventanaPrincipal.usuario #obtener el nombre del usuario que inicio sección
+
+        self.baseDatos.verificarRegistro(usuario)
+        self.baseDatos.guardarContraseña(contraseña, mensaje)
+
         self.close()
 
-    def guardar(self):
-        print(self.contraseña)
-
-    def closeEvent(self, event):
-        # Conectar la señal 'closed' de la ventana secundaria a la función de maximizar
-        self.ventanaPrincipal.maximizar_ventana_principal()
-        super().closeEvent(event)
-
-
-
-""" if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    ventana = agregarContraseña()
-    sys.exit(app.exec()) """
+    def cancelar(self):
+        self.close()
