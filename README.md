@@ -24,17 +24,31 @@
 
 * Cuando el usuario le de por primera ves al boton le mostrara un ventana con el mensaje : no esta registrado.
     - mostrara dos opciones, salir y registrarce
-    - si el usuario preciona el boton salir se cerrara la ventana
-    - si el usuario preciona el boton registrarce le abrira una nueva ventana para registrarce
+    - si el usuario preciona el boton 'salir' se cerrara la ventana
+    - si el usuario preciona el boton 'registrarce' le abrira una nueva ventana para registrarce
     - Se mostrar un mensaje de que ha sido registrado exitoxamente o no y debe intentarlo de nuevo
     - Si el registro fue exitoso le mostrar el mensaje : ¡registrado exitosamente! Para ver su contraseñas guardadas ingrese a la sección "Mis contraseñas" con su usuario y clave
 
 ## Boton (Mis contraseñas) ubicado en la parte superior derecha 
 
 * Boton que abrira la sección donde se podran ver la contraseña que el usuario haya agregado mediante el boton (Agregar a mis contraseñas)
-* En esta ventana habra una tabla de 2 columnas una espacio para la contraseña y uno para el mensaje
+* En esta ventana habra una tabla de 2 columnas una espacio para la contraseña y otro para el mensaje
 * Si el usuario le da por primera ves a mis contraseñas le mostrara el mensaje de debe registrarce o salir
     - si el usuario preciona el boton "salir" se cerrara la ventana
-    - si el usuario preciona el boton registrarce le abrira una nueva ventana para registrarce
-    - Se mostrar un mensaje de que ha sido registrado exitoxamente o no y debe intentarlo de nuevo
+    - si el usuario preciona el boton 'registrarce' le abrira una nueva ventana para registrarce
+    - mostrar un mensaje de que ha sido registrado exitoxamente o no y debe intentarlo de nuevo
     - Si el registro fue exitoso le mostrar el mensaje : ¡registrado exitosamente! Para ver su contraseñas guardadas vuelva a oprimir el  boton y ingrese con su usuario y clave
+
+
+## Agregar seccion para eliminar contraseñas y usuario
+
+# Tendra un boton en la sección de 'mis contraseñas' el boton tendra el texto de 'administrar'
+
+* Al dar click en el boton se abrira una ventana con las siguentes caracteristicas : 
+* - la ventana mostrara el usuario
+* - mostrara las contraseñas
+* - al lado de cada contraseña un checkbox para selecionarla
+* - boton eliminar que borrar la contraseñas selecionadas si le da al boton sin selecionar nada mostrara un mensaje QMesaggeBox
+con la leyenda : "Debe selecionar al menos una contraseña"
+
+* - La ventana tendra otro boton que se llamara 'cerar y Guardar cambios': cierra la ventana y borra las contraseñas de la base de datos.

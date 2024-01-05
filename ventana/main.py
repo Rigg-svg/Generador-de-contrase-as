@@ -6,7 +6,7 @@ from base_datos import *
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPalette, QFont, QIcon
-from PyQt6.QtWidgets import QWidget, QPushButton, QCheckBox, QLabel, QApplication, QLineEdit, QMessageBox, QFormLayout
+from PyQt6.QtWidgets import QWidget, QPushButton, QCheckBox, QLabel, QApplication, QLineEdit, QMessageBox, QFormLayout, QHBoxLayout, QSpacerItem, QSizePolicy
 
 
 class ventana(QWidget):
@@ -20,7 +20,7 @@ class ventana(QWidget):
         self.ventana_agregar = agregarContraseña(self) #Se pasa la clase del ventana principal (class ventana()) para crear una intancia de la ventana principal en la ventana de agregar a mis contraseñas
         self.usuario = ''
 
-        self.show()
+        self.showMaximized()
 
     def inicilalizarIU(self):
         self.setWindowTitle("Generador de contraseñas")
@@ -199,7 +199,6 @@ class ventana(QWidget):
         if contraseña != "'Oprima el boton GENERAR'":
             # Copiar el texto al portapapeles
             portapapeles.setText(contraseña)
-            print(contraseña)
 
     def misContrasenas(self):
         if self.inicioSeccionExitoso:
@@ -207,12 +206,14 @@ class ventana(QWidget):
             if self.ventana_misContraseñas.ventanaInicializada is not True:
                 self.ventana_misContraseñas.inicilalizarIU()
                 self.ventana_misContraseñas.addItemsTable()
-                self.ventana_misContraseñas.show()
+                self.ventana_misContraseñas.showMaximized()#mazimar la ventana 'mis contraseñas'
                 self.ventana_misContraseñas.ventanaInicializada = True
+                self.showMinimized() #minimizar la 'ventana principal'
 
             else:
                 self.ventana_misContraseñas.addItemsTable()
-                self.ventana_misContraseñas.show()
+                self.ventana_misContraseñas.showMaximized() #mazimar la ventana 'mis contraseñas'
+                self.showMinimized() #minimizar la 'ventana principal'
         else:
             self.ventana_noRegistrado.incializarVentana() #Abrir la ventana de error, si el usuario aún no ha iniciado sección
 
@@ -226,8 +227,6 @@ class ventana(QWidget):
             if contraseña != "'Oprima el boton GENERAR'":
                 self.ventana_agregar.inicilalizarIU()
 
-    def maximizar_ventana_principal(self):
-        self.showMaximized()
 
 #ventanas de error, ventana de rigsitrarce y iniciar sección
 class ventanaError(QDialog):
@@ -328,7 +327,6 @@ class ventanaError(QDialog):
     def iniciarSeccion(self):
         self.ventana_iniciar_seccion = ventanaIniciarSeccion(self)
         self.ventana_iniciar_seccion.iniciarVentana()
-        self.close() #Cierra esta ventana luego de cerrar la ventana de iniciar sección
 
     def cerrarVentana(self):
         self.close()
@@ -457,13 +455,31 @@ class ventanaIniciarSeccion(QDialog):
         btn_inciarSeccion = QPushButton("INICIAR SECCIÓN")
         btn_inciarSeccion.clicked.connect(self.iniciarSeccion)
 
+        checkboxContrasena = QCheckBox()
+        checkboxContrasena.setText("ver contraseña")
+
+        btn_regresar = QPushButton("REGRESAR")
+        btn_regresar.clicked.connect(self.regresar)
+
         main_layout.setVerticalSpacing(30)
 
         self.setContentsMargins(0, 40, 0, 40)
 
+        layoutContrasena = QHBoxLayout()
+        layoutContrasena.addWidget(labelInput2)
+        layoutContrasena.addSpacing(49)
+        layoutContrasena.addWidget(self.inputBox2)
+
+        layoutContrasena_checkbox = QVBoxLayout()
+        layoutContrasena_checkbox.addLayout(layoutContrasena)
+        #layoutContrasena_checkbox.addSpacing(10)
+        layoutContrasena_checkbox.addWidget(checkboxContrasena)
+
         main_layout.addRow(labelInput1, self.inputBox1)
-        main_layout.addRow(labelInput2, self.inputBox2)
+        main_layout.addRow(layoutContrasena_checkbox)
+
         main_layout.addRow(btn_inciarSeccion)
+        main_layout.addRow(btn_regresar)
 
         self.setLayout(main_layout)
 
@@ -497,6 +513,8 @@ class ventanaIniciarSeccion(QDialog):
                                 QMessageBox.StandardButton.Close,
                                 QMessageBox.StandardButton.Close)
 
+    def regresar(self):
+        self.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

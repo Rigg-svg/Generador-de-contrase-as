@@ -1,6 +1,6 @@
 from base_datos import *
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QColor, QPalette
+from PyQt6.QtGui import QCloseEvent, QColor, QPalette
 from PyQt6.QtWidgets import  QPushButton, QLabel, QLineEdit, QDialog
 
 class agregarContraseña(QDialog):
@@ -38,15 +38,15 @@ class agregarContraseña(QDialog):
 
         titulo_contrasena = QLabel(self)
         titulo_contrasena.setText("Contraseña")
-        titulo_contrasena.move(225, 135)
+        titulo_contrasena.move(220, 135)
 
         titulo_dispocicion = QLabel(self)
         titulo_dispocicion.setText("Dispocición")
-        titulo_dispocicion.move(230, 245)
+        titulo_dispocicion.move(225, 245)
 
         self.campo_contrasena = QLineEdit(self)
-        self.campo_contrasena.resize(110, 30)
-        self.campo_contrasena.move(207, 157)
+        self.campo_contrasena.resize(150, 30)
+        self.campo_contrasena.move(175, 157)
         self.campo_contrasena.setDisabled(True)
         self.campo_contrasena.setText(contraseña)#mostrar la contraseña en pantalla
         self.campo_contrasena.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -115,3 +115,7 @@ class agregarContraseña(QDialog):
 
     def cancelar(self):
         self.close()
+
+    def closeEvent(self, event):
+        self.ventanaPrincipal.showMaximized()
+        event.accept()

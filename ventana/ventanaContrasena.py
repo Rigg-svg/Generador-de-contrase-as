@@ -45,8 +45,6 @@ class misContraseñas(QDialog):
 
         self.setLayout(main_layout)
 
-        #self.finished.connect(self.eliminarDiseño)
-
     def generarTabla(self):
 
         self.tabla = QTableWidget(40,2) #Crear un widget tabla con 2 filas y dos columnas
@@ -85,3 +83,7 @@ class misContraseñas(QDialog):
 
     def regresar(self):#Funcion del boton (btn_regrsar)
         self.close()
+
+    def closeEvent(self, event):
+        self.ventanaPrincipal.showMaximized()
+        event.accept()
