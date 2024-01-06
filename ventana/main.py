@@ -5,7 +5,7 @@ from agregarContrasena import *
 from base_datos import *
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QColor, QPalette, QFont, QIcon
+from PyQt6.QtGui import QCloseEvent, QColor, QPalette, QFont, QIcon
 from PyQt6.QtWidgets import QWidget, QPushButton, QCheckBox, QLabel, QApplication, QLineEdit, QMessageBox, QFormLayout, QHBoxLayout, QSpacerItem, QSizePolicy
 
 
@@ -328,6 +328,11 @@ class ventanaError(QDialog):
         self.ventana_iniciar_seccion = ventanaIniciarSeccion(self)
         self.ventana_iniciar_seccion.iniciarVentana()
 
+    def closeEvent(self, event):
+        self.ventanaPrincipal.showMaximized()
+        event.accept()
+
+
     def cerrarVentana(self):
         self.close()
 
@@ -371,6 +376,9 @@ class ventanaRegistrarce(QDialog):
 
         labelInput3 = QLabel("Repita contraseña:")
         self.inputBox3 = QLineEdit()
+        self.inputBox3.setEchoMode(
+        QLineEdit.EchoMode.Password
+        )
 
         btn_registrarse = QPushButton("REGISTRARSE")
         btn_registrarse.clicked.connect(self.registrarUsuario)
@@ -421,7 +429,6 @@ class ventanaIniciarSeccion(QDialog):
         self.ventanaPadre = ventanaPadre
         self.setModal(True)
 
-
     def iniciarVentana(self):
         paleta = self.palette() #Se debe crear un objeto paleta
 
@@ -444,44 +451,37 @@ class ventanaIniciarSeccion(QDialog):
         self.show()
 
     def widgets(self):
-        main_layout = QFormLayout()
 
-        labelInput1 = QLabel("Nombre de usuario:")
-        self.inputBox1 = QLineEdit()
+        labelInput1 = QLabel("Nombre de usuario:", self)
+        labelInput1.move(15, 52)
+        self.inputBox1 = QLineEdit(self)
+        self.inputBox1.resize(155, 20)
+        self.inputBox1.move(128, 50)
 
-        labelInput2 = QLabel("Contraseña:")
-        self.inputBox2 = QLineEdit()
+        labelInput2 = QLabel("Contraseña:", self)
+        labelInput2.move(15, 105)
+        self.inputBox2 = QLineEdit(self)
+        self.inputBox2.resize(155, 20)
+        self.inputBox2.move(128, 105)
+        self.inputBox2.setEchoMode(
+        QLineEdit.EchoMode.Password
+        )
 
-        btn_inciarSeccion = QPushButton("INICIAR SECCIÓN")
+        self.checkboxContrasena = QCheckBox(self)
+        self.checkboxContrasena.setText("ver contraseña")
+        self.checkboxContrasena.move(128, 132)
+        self.checkboxContrasena.clicked.connect(self.verContrasena)
+
+        btn_inciarSeccion = QPushButton("INICIAR SECCIÓN", self)
+        btn_inciarSeccion.move(100, 180)
         btn_inciarSeccion.clicked.connect(self.iniciarSeccion)
 
-        checkboxContrasena = QCheckBox()
-        checkboxContrasena.setText("ver contraseña")
-
-        btn_regresar = QPushButton("REGRESAR")
+        btn_regresar = QPushButton("REGRESAR", self)
+        btn_regresar.move(113, 220)
         btn_regresar.clicked.connect(self.regresar)
 
-        main_layout.setVerticalSpacing(30)
+        #self.setContentsMargins(0, 40, 0, 40)
 
-        self.setContentsMargins(0, 40, 0, 40)
-
-        layoutContrasena = QHBoxLayout()
-        layoutContrasena.addWidget(labelInput2)
-        layoutContrasena.addSpacing(49)
-        layoutContrasena.addWidget(self.inputBox2)
-
-        layoutContrasena_checkbox = QVBoxLayout()
-        layoutContrasena_checkbox.addLayout(layoutContrasena)
-        #layoutContrasena_checkbox.addSpacing(10)
-        layoutContrasena_checkbox.addWidget(checkboxContrasena)
-
-        main_layout.addRow(labelInput1, self.inputBox1)
-        main_layout.addRow(layoutContrasena_checkbox)
-
-        main_layout.addRow(btn_inciarSeccion)
-        main_layout.addRow(btn_regresar)
-
-        self.setLayout(main_layout)
 
     def iniciarSeccion(self):
         usuario, contraseña = self.inputBox1.text(), self.inputBox2.text()
@@ -515,6 +515,16 @@ class ventanaIniciarSeccion(QDialog):
 
     def regresar(self):
         self.close()
+
+    def verContrasena(self, clicked):
+        if clicked:
+            self.inputBox2.setEchoMode(
+            QLineEdit.EchoMode.Normal
+            )
+        else:
+            self.inputBox2.setEchoMode(
+            QLineEdit.EchoMode.Password
+            )
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
